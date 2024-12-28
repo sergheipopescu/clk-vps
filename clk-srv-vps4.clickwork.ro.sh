@@ -9,17 +9,17 @@ sudo timedatectl set-timezone Europe/Bucharest
 sudo update-locale 'LC_TIME="C.UTF-8"'
 
 # Add sudo user with full name. Will be prompted for password
-sudo adduser noble --gecos "Clickwork IT Admin" --disabled-password
+# sudo adduser noble --gecos "Clickwork IT Admin" --disabled-password
 
 # Add sudo user to the admin group
-sudo addgroup --system admin; echo "%admin ALL=(ALL) ALL" >> /etc/sudoers && adduser noble admin
+# sudo addgroup --system admin; echo "%admin ALL=(ALL) ALL" >> /etc/sudoers && adduser noble admin
 
 # Get script name
 scriptname="${0%.*}"
 echo -e "The script name without extension is: $scriptname"
 
 # Set hostname
-sudo hostnamectl set-hostname clk-srv-vps4.clickwork.ro
+sudo hostnamectl set-hostname $scriptname
 
 # Install packages for customization and cleanup unneeded packages
 sudo apt-get update
