@@ -8,6 +8,12 @@
 sudo timedatectl set-timezone Europe/Bucharest
 sudo update-locale 'LC_TIME="C.UTF-8"'
 
+# Add sudo user with full name. Will be prompted for password
+sudo adduser noble --gecos "Clickwork IT Admin" --disabled-password
+
+# Add sudo user to the admin group
+sudo addgroup --system admin; echo "%admin ALL=(ALL) ALL" >> /etc/sudoers && adduser noble admin
+
 # Get script name
 scriptname="${0%.*}"
 echo -e "The script name without extension is: $scriptname"
@@ -70,7 +76,7 @@ hostname=$(hostname)
 
 # Configure CSF
 sudo sed -i 's|TESTING = "1"|TESTING = "0"|' /etc/csf/csf.conf
-sudo sed -i '/TCP_IN =/c\TCP_IN = "21,80,443,2282,40001:40128"' /etc/csf/csf.conf
+sudo sed -i '/TCP_IN =/c\TCP_IN = "21,80,443,2282,40001-40128"' /etc/csf/csf.conf
 sudo sed -i '/TCP_OUT =/c\TCP_OUT = "20,21,25,53,80,113,443,2282,11371"' /etc/csf/csf.conf
 sudo sed -i '/UDP_IN =/c\UDP_IN = ""' /etc/csf/csf.conf
 sudo sed -i '/UDP_OUT =/c\UDP_OUT = "20,21,53,113,123"' /etc/csf/csf.conf
@@ -673,3 +679,6 @@ sudo curl -s https://clickwork.ro/.down/_init/24.04/lamp.start.sh -o /usr/sbin/l
 
 sudo chmod +x /usr/sbin/entld
 sudo chmod +x /usr/sbin/lampstart
+
+
+
