@@ -13,7 +13,7 @@ scriptname="${0%.*}"
 echo -e "The script name without extension is: $scriptname"
 
 # Set hostname
-sudo hostnamectl set-hostname "$scriptname"
+sudo hostnamectl set-hostname clk-srv-vps4.clickwork.ro
 
 # Install packages for customization and cleanup unneeded packages
 sudo apt-get update
