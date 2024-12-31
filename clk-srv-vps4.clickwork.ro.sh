@@ -112,10 +112,6 @@ echo -e '
 	dateext
 }' | sudo tee /etc/logrotate.d/csf > /dev/null
 
-# Copy root ssh key to sudo user profile
-sudo cp -r /root/.ssh /home/noble
-sudo chown -R noble /home/noble/.ssh
-
 
 
 ################################
@@ -241,7 +237,7 @@ sudo apt-get install php$phpvrs-{curl,dom,exif,fileinfo,igbinary,imagick,intl,me
 sudo sed -i 's|pm.max_children = 5|pm.max_children = 50|' /etc/php/$phpvrs/fpm/pool.d/www.conf
 sudo sed -i 's|upload_max_filesize = 2M|upload_max_filesize = 200M|' /etc/php/$phpvrs/fpm/php.ini
 sudo sed -i 's|post_max_size = 8M|post_max_size = 200M|' /etc/php/$phpvrs/fpm/php.ini
-sudo sed -i 's|memory_limit = 128M|memory_limit = 512M|' /etc/php/$phpvrs/fpm/php.ini
+sudo sed -i 's|memory_limit = 128M|memory_limit = 256M|' /etc/php/$phpvrs/fpm/php.ini
 sudo sed -i 's|max_execution_time = 30|max_execution_time = 300|' /etc/php/$phpvrs/fpm/php.ini
 sudo sed -i 's|max_input_time = 60|max_input_time = 300|' /etc/php/$phpvrs/fpm/php.ini
 sudo sed -i 's|;max_input_vars = 1000|max_input_vars = 20000|' /etc/php/$phpvrs/fpm/php.ini
@@ -293,7 +289,7 @@ sudo apt-get install php$phpvrs-{curl,dom,exif,fileinfo,igbinary,imagick,intl,me
 sudo sed -i 's|pm.max_children = 5|pm.max_children = 50|' /etc/php/$phpvrs/fpm/pool.d/www.conf
 sudo sed -i 's|upload_max_filesize = 2M|upload_max_filesize = 200M|' /etc/php/$phpvrs/fpm/php.ini
 sudo sed -i 's|post_max_size = 8M|post_max_size = 200M|' /etc/php/$phpvrs/fpm/php.ini
-sudo sed -i 's|memory_limit = 128M|memory_limit = 512M|' /etc/php/$phpvrs/fpm/php.ini
+sudo sed -i 's|memory_limit = 128M|memory_limit = 256M|' /etc/php/$phpvrs/fpm/php.ini
 sudo sed -i 's|max_execution_time = 30|max_execution_time = 300|' /etc/php/$phpvrs/fpm/php.ini
 sudo sed -i 's|max_input_time = 60|max_input_time = 300|' /etc/php/$phpvrs/fpm/php.ini
 sudo sed -i 's|;max_input_vars = 1000|max_input_vars = 20000|' /etc/php/$phpvrs/fpm/php.ini
@@ -631,7 +627,8 @@ echo "1" | sudo tee /etc/pure-ftpd/conf/TLS > /dev/null
 echo "40001 40128" | sudo tee /etc/pure-ftpd/conf/PassivePortRange > /dev/null
 
 # Set passive IP
-curl -s ifconfig.me | sudo tee /etc/pure-ftpd/conf/ForcePassiveIP  > /dev/null
+#curl -s ifconfig.me | sudo tee /etc/pure-ftpd/conf/ForcePassiveIP  > /dev/null
+curl -s ipinfo.io/ip | sudo tee /etc/pure-ftpd/conf/ForcePassiveIP  > /dev/null
 
 # Install SSL certificate
 #sudo mkdir -p /etc/ssl/private/
@@ -673,3 +670,22 @@ sudo curl -s https://clickwork.ro/.down/_init/24.04/lamp.start.sh -o /usr/sbin/l
 
 sudo chmod +x /usr/sbin/entld
 sudo chmod +x /usr/sbin/lampstart
+
+
+
+###########################
+## Last update & upgrade ##
+###########################
+
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt-get dist-upgrade -y
+
+
+
+################################
+## Enable firewall and reboot ##
+################################
+sudo csf -e
+echo "You dungoofed! The server will self destruct!"
+sudo reboot

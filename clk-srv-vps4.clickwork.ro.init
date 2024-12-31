@@ -40,6 +40,10 @@ sudo sed -i "/#MaxAuthTries/c\MaxAuthTries	3" /etc/ssh/sshd_config
 sudo sed -i 's|PermitRootLogin yes|PermitRootLogin prohibit-password|' /etc/ssh/sshd_config
 sudo sed -i "\$a\\\nMatch User root\n	PasswordAuthentication no" /etc/ssh/sshd_config
 
+# Copy root ssh key to sudo user profile
+sudo cp -r /root/.ssh /home/noble
+sudo chown -R noble /home/noble/.ssh
+
 # motd cleanup
 sudo sed -i 's|ENABLED=1|ENABLED=0|' /etc/default/motd-news
 sudo sed -i '/Graph this data/d' /usr/lib/python3/dist-packages/landscape/sysinfo/landscapelink.py
@@ -76,7 +80,7 @@ hostname=$(hostname)
 
 # Configure CSF
 sudo sed -i 's|TESTING = "1"|TESTING = "0"|' /etc/csf/csf.conf
-sudo sed -i '/TCP_IN =/c\TCP_IN = "21,80,443,2282,40001-40128"' /etc/csf/csf.conf
+sudo sed -i '/TCP_IN =/c\TCP_IN = "21,80,443,2282,40001:40128"' /etc/csf/csf.conf
 sudo sed -i '/TCP_OUT =/c\TCP_OUT = "20,21,25,53,80,113,443,2282,11371"' /etc/csf/csf.conf
 sudo sed -i '/UDP_IN =/c\UDP_IN = ""' /etc/csf/csf.conf
 sudo sed -i '/UDP_OUT =/c\UDP_OUT = "20,21,53,113,123"' /etc/csf/csf.conf
@@ -117,10 +121,6 @@ echo -e '
 	create 640 root adm
 	dateext
 }' | sudo tee /etc/logrotate.d/csf > /dev/null
-
-# Copy root ssh key to sudo user profile
-sudo cp -r /root/.ssh /home/noble
-sudo chown -R noble /home/noble/.ssh
 
 
 
@@ -637,7 +637,8 @@ echo "1" | sudo tee /etc/pure-ftpd/conf/TLS > /dev/null
 echo "40001 40128" | sudo tee /etc/pure-ftpd/conf/PassivePortRange > /dev/null
 
 # Set passive IP
-curl -s ifconfig.me | sudo tee /etc/pure-ftpd/conf/ForcePassiveIP  > /dev/null
+#curl -s ifconfig.me | sudo tee /etc/pure-ftpd/conf/ForcePassiveIP  > /dev/null
+curl -s ipinfo.io/ip | sudo tee /etc/pure-ftpd/conf/ForcePassiveIP  > /dev/null
 
 # Install SSL certificate
 #sudo mkdir -p /etc/ssl/private/
@@ -682,3 +683,19 @@ sudo chmod +x /usr/sbin/lampstart
 
 
 
+###########################
+## Last update & upgrade ##
+###########################
+
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt-get dist-upgrade -y
+
+
+
+################################
+## Enable firewall and reboot ##
+################################
+sudo csf -e
+echo "You dungoofed! The server will self destruct!"
+sudo reboot
