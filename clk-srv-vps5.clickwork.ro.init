@@ -222,7 +222,7 @@ END
 
 sudo sed -i '/Fine Tuning/{N;N;s/$/\nquery_cache_size = 0/}' /etc/mysql/mariadb.conf.d/50-server.cnf
 sudo sed -i '/max_connections/c\max_connections         = 400' /etc/mysql/mariadb.conf.d/50-server.cnf
-sudo sed -i '/innodb_buffer_pool_size =/c\innodb_buffer_pool_size = 3G\nkey_buffer_size = 10M' /etc/mysql/mariadb.conf.d/50-server.cnf
+sudo sed -i '/innodb_buffer_pool_size =/c\innodb_buffer_pool_size = 1G\nkey_buffer_size = 10M' /etc/mysql/mariadb.conf.d/50-server.cnf
 
 
 
@@ -255,7 +255,7 @@ sudo sed -i 's|;realpath_cache_size = 4096k|realpath_cache_size = 4096k|' /etc/p
 
 # enable opcache + optimization tweaks
 sudo sed -i '/opcache.enable=/c\opcache.enable=1' /etc/php/$phpvrs/fpm/php.ini
-sudo sed -i '/opcache.memory_consumption=/c\opcache.memory_consumption=512' /etc/php/$phpvrs/fpm/php.ini
+sudo sed -i '/opcache.memory_consumption=/c\opcache.memory_consumption=256' /etc/php/$phpvrs/fpm/php.ini
 sudo sed -i '/opcache.max_accelerated_files=/c\opcache.max_accelerated_files=30000' /etc/php/$phpvrs/fpm/php.ini
 sudo sed -i '/opcache.max_wasted_percentage=/c\opcache.max_wasted_percentage=15' /etc/php/$phpvrs/fpm/php.ini
 sudo sed -i '/opcache.validate_timestamps=/c\opcache.validate_timestamps=1' /etc/php/$phpvrs/fpm/php.ini
@@ -343,7 +343,7 @@ sudo apt-get install memcached libmemcached-tools -y
 # configure memcached max memory and logs
 sudo mkdir /var/log/memcached
 sudo sed -i '/logfile \/var\/log/c\logfile \/var\/log\/memcached\/memcached.log' /etc/memcached.conf
-sudo sed -i '/-m /c\-m 2048' /etc/memcached.conf
+sudo sed -i '/-m /c\-m 1024' /etc/memcached.conf
 sudo systemctl start memcached
 
 # logrotate memcached logs
@@ -526,7 +526,7 @@ sudo apt-get install python3-certbot-nginx -y
 hostname=$(hostname)
 
 # get certificate for hostname
-sudo certbot certonly --nginx --non-interactive --agree-tos --quiet --test-cert -m postmaster@"$hostname" -d "$hostname"
+sudo certbot certonly --nginx --non-interactive --agree-tos --quiet -m postmaster@"$hostname" -d "$hostname"
 
 # install post renew hook
 sudo echo -e '
