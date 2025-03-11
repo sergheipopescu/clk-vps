@@ -424,6 +424,58 @@ sudo a2enconf clk.a2.pma
 
 
 
+#####################
+## Wildcard config ##
+#####################
+
+sudo mkdir /var/www/wildcard
+
+echo -e '<?php\n\n	phpinfo( );\n\n?>' | sudo tee /var/www/wildcard/info.php > /dev/null
+
+# shellcheck disable=SC2016
+echo -e '
+<?php
+
+$meminstance = new Memcached();
+
+$meminstance->addServer("127.0.0.1",11211);
+
+$result = $meminstance->get("test");
+
+if ($result) {
+    echo $result;
+} else {
+    echo "No matching key found. Refresh the browser to add it!";
+    $meminstance->set("test", "Successfully retrieved the data!") or die("Could not save anything to memcached...");
+}
+?>' | sudo tee /var/www/wildcard/cache.php > /dev/null
+
+cd /opt || exit
+git clone https://github.com/RobiNN1/phpCacheAdmin
+
+sudo mv phpCacheAdmin /var/www/wildcard/
+
+sudo rm -r /var/www/wildcard/phpCacheAdmin/.*
+
+sudo chown -R www-data /var/www/wildcard
+sudo chmod -R 0500 /var/www/wildcard
+sudo chmod -R 0700 /var/www/wildcard/phpCacheAdmin
+sudo find /var/www/wildcard -type f -print0 | xargs -0 sudo chmod 400
+
+echo -e '
+	Alias /info.php /var/www/wildcard/info.php
+	Alias /cache.php /var/www/wildcard/cache.php
+	Alias /php.CA /var/www/wildcard/phpCacheAdmin/
+
+	<Directory /var/www/wildcard>
+	  Require ip 95.77.98.180
+	</Directory>
+
+' | sudo tee /etc/apache2/conf-available/wildcard.conf > /dev/null
+
+sudo a2enconf wildcard
+
+
 
 ###############################
 ## Install & configure nginx ##
