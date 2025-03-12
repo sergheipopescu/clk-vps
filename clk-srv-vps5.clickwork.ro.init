@@ -638,7 +638,7 @@ sudo groupadd -g 2001 pftpd
 sudo useradd -u 2001 -s /bin/false -d /bin/null -c "Pureftpd User" -g pftpd pftpd
 
 # Generate ftp database password
-ftpdbpass=$(openssl rand -base64 15)
+ftpdbpass=$(openssl rand -base64 29 | tr -d "/" | cut -c1-20)
 echo "The pftpd-admin password is:	$ftpdbpass" | sudo tee --append /root/salt > /dev/null
 
 # Create ftp database and schema
