@@ -463,8 +463,8 @@ sudo chmod -R 0700 /var/www/wildcard/phpCacheAdmin
 sudo find /var/www/wildcard -type f -print0 | xargs -0 sudo chmod 400
 
 echo -e '
-	Alias /info.php /var/www/wildcard/info.php
-	Alias /cache.php /var/www/wildcard/cache.php
+	Alias /php.info /var/www/wildcard/info.php
+	Alias /php.cache /var/www/wildcard/cache.php
 	Alias /php.CA /var/www/wildcard/phpCacheAdmin/
 
 	<Directory /var/www/wildcard>
