@@ -208,7 +208,7 @@ sudo sed -i '/log_error/s/^#//g' /etc/mysql/mariadb.conf.d/50-server.cnf
 echo -e "\n\nn\n\n\n\n\n" | sudo mariadb-secure-installation
 
 ## create random mariadb password ##
-mdbpass=$(openssl rand -base64 15)
+mdbpass=$(openssl rand -base64 29 | tr -d "/" | cut -c1-20)
 echo "The root mariaDB password is:	$mdbpass" | sudo tee --append /root/salt > /dev/null
 
 # change MariaDB root password
@@ -376,7 +376,7 @@ sudo mkdir /etc/phpmyadmin/
 sudo cp /usr/share/phpmyadmin/config.sample.inc.php /usr/share/phpmyadmin/config.inc.php
 
 # Set pma db password and blowfish secret
-pmadbpass=$(openssl rand -base64 15)
+pmadbpass=$(openssl rand -base64 29 | tr -d "/" | cut -c1-20)
 echo "The pm--admin password is:	$pmadbpass" | sudo tee --append /root/salt > /dev/null
 pmabfish=$(openssl rand -base64 24)
 echo "The phpMyAdmin blowfish is:	$pmabfish" | sudo tee --append /root/salt > /dev/null
