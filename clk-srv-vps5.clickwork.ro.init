@@ -111,7 +111,7 @@ echo -e "# Log kernel generated firewall log to file\n:msg,contains,\"Firewall:\
 
 # logrotate firewall logs
 echo -e '
-/var/log/csf/* {
+/var/log/csf/*.log {
 	daily
 	missingok
 	rotate 30
@@ -348,7 +348,7 @@ sudo systemctl start memcached
 
 # logrotate memcached logs
 echo -e '
-/var/log/memcached/* {
+/var/log/memcached/*.log {
 	daily
 	missingok
 	rotate 30
@@ -614,7 +614,7 @@ sudo postconf maillog_file=/var/log/postfix/mail.log
 
 # logrotate postfix logs
 echo -e '
-/var/log/postfix/* {
+/var/log/postfix/*.log {
 	daily
 	missingok
 	rotate 30
@@ -708,17 +708,18 @@ echo -e "# Log kernel generated FTP log to file\n:syslogtag, isequal, \"pure-ftp
 sudo chown root:syslog /var/log/pure-ftpd
 sudo chmod 0770 /var/log/pure-ftpd
 
-# logrotate firewall logs
+# logrotate ftp logs
 echo -e '
-/var/log/pure-ftpd/* {
-	daily
-	missingok
-	rotate 30
-	compress
-	delaycompress
-	notifempty
-	create 640 root adm
-	dateext
+/var/log/pure-ftpd/pure-ftpd.log {
+        weekly
+        missingok
+        rotate 7
+        compress
+        delaycompress
+        postrotate
+                /usr/sbin/pure-ftpd-control restart >/dev/null
+        endscript
+        notifempty
 }' | sudo tee /etc/logrotate.d/pure-ftpd > /dev/null
 
 
