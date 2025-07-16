@@ -1,0 +1,35 @@
+#cloud-config
+autoinstall:
+  version: 1
+
+  locale: C.UTF-8
+  keyboard:
+    layout: us
+  timezone: Europe/Bucharest
+
+  network:
+    version: 2
+    ethernets:
+      enp1s0:
+        dhcp4: true
+
+  kernel:
+    package: linux-azure
+
+    packages: 
+    - ubuntu-server
+
+  identity:
+    username: noble
+    realname: Clickwork IT Admin
+    hostname: clk-2404
+    password: "$6$kWsNrcGo44olZ3zB$YMI1wdaf5rtqQS.Ap9UQ8FtJVsqnWQCmRKG8UKR7WEE65pP7yDttCGiJbPwHNwoFOvXdyowJVI/QXbBJNrjPO/"
+
+  interactive-sections:
+    - storage
+
+  ssh:
+    install-server: true
+    allow-pw: true
+    authorized-keys:
+    - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBGiRsdL0paOcZGxKU8UL/k4c1My23KDHJtZTrjF4i2hrTHpIQqZG1iGz5PsYd94bhW2Fe2g5j/znQpgmILJNPtk= noble@clk2404
